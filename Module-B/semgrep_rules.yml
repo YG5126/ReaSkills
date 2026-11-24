@@ -1,0 +1,71 @@
+rules:
+- id: bank.untrusted-user-id-header
+  languages:
+  - python
+  severity: ERROR
+  message: Identity is taken directly from attacker-controlled X-User-Id header without
+    verification
+  pattern: "async def get_current_user_id(x_user_id: str | None = Header(default=None))\
+    \ -> int:\n  ...\n"
+  metadata:
+    category: security
+    cwe:
+    - CWE-287
+    - CWE-639
+- id: bank.balance-read-without-row-lock
+  languages:
+  - python
+  severity: WARNING
+  message: Balance read and updated without SELECT FOR UPDATE; examine concurrency
+    and double spend risk
+  pattern: $CONN.fetchval("SELECT balance_cents FROM accounts WHERE id=$1", $ID)
+  metadata:
+    category: security
+    cwe:
+    - CWE-362
+- id: bank.cache-hit-empty-results
+  languages:
+  - python
+  severity: WARNING
+  message: Cache hit returns empty transaction history rather than cached content
+  pattern: "if cached:\n  return []\n"
+  metadata:
+    category: correctness
+- id: bank.cache-key-invalidation-mismatch
+  languages:
+  - python
+  severity: WARNING
+  message: Deletes tx:user key while reads use tx:user:limit:search; cache may remain
+    stale
+  pattern: await $REDIS.delete(f"tx:{user_id}")
+  metadata:
+    category: correctness
+- id: bank.str-interpolated-sql
+  languages:
+  - python
+  severity: INFO
+  message: 'SQL assembled with f-string: investigate whether interpolated portion
+    is user-controlled (not SQLi by itself)'
+  pattern: $SQL += f"..."
+  metadata:
+    category: audit
+    cwe:
+    - CWE-89
+- id: bank.published-data-port
+  languages:
+  - yaml
+  severity: WARNING
+  message: Порт хранилища опубликован на хосте.
+  pattern-regex: '"((5432:5432)|(6379:6379))"'
+- id: bank.compose-db-password
+  languages:
+  - yaml
+  severity: WARNING
+  message: Статический пароль базы в манифесте.
+  pattern-regex: POSTGRES_PASSWORD:\s*postgres
+- id: bank.compose-inline-dsn
+  languages:
+  - yaml
+  severity: WARNING
+  message: Учётные данные в открытом DSN.
+  pattern-regex: postgresql://[^\s]+:[^\s]+@

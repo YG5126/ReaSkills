@@ -1,0 +1,432 @@
+{
+  "automated": [
+    {
+      "check_id": "bank.balance-read-without-row-lock",
+      "path": "app\\crud.py",
+      "start": {
+        "line": 22,
+        "col": 25,
+        "offset": 750
+      },
+      "end": {
+        "line": 22,
+        "col": 97,
+        "offset": 822
+      },
+      "extra": {
+        "metavars": {
+          "$CONN": {
+            "start": {
+              "line": 22,
+              "col": 25,
+              "offset": 750
+            },
+            "end": {
+              "line": 22,
+              "col": 29,
+              "offset": 754
+            },
+            "abstract_content": "conn",
+            "propagated_value": {
+              "svalue_start": {
+                "line": 20,
+                "col": 16,
+                "offset": 663
+              },
+              "svalue_end": {
+                "line": 20,
+                "col": 30,
+                "offset": 677
+              },
+              "svalue_abstract_content": "pool.acquire()"
+            }
+          },
+          "$ID": {
+            "start": {
+              "line": 22,
+              "col": 89,
+              "offset": 814
+            },
+            "end": {
+              "line": 22,
+              "col": 96,
+              "offset": 821
+            },
+            "abstract_content": "from_id"
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Balance read and updated without SELECT FOR UPDATE; examine concurrency and double spend risk",
+        "metadata": {
+          "category": "security",
+          "cwe": [
+            "CWE-362"
+          ]
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.cache-key-invalidation-mismatch",
+      "path": "app\\crud.py",
+      "start": {
+        "line": 40,
+        "col": 5,
+        "offset": 1706
+      },
+      "end": {
+        "line": 40,
+        "col": 36,
+        "offset": 1737
+      },
+      "extra": {
+        "metavars": {
+          "$REDIS": {
+            "start": {
+              "line": 40,
+              "col": 11,
+              "offset": 1712
+            },
+            "end": {
+              "line": 40,
+              "col": 12,
+              "offset": 1713
+            },
+            "abstract_content": "r",
+            "propagated_value": {
+              "svalue_start": {
+                "line": 18,
+                "col": 9,
+                "offset": 635
+              },
+              "svalue_end": {
+                "line": 18,
+                "col": 20,
+                "offset": 646
+              },
+              "svalue_abstract_content": "get_redis()"
+            }
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Deletes tx:user key while reads use tx:user:limit:search; cache may remain stale",
+        "metadata": {
+          "category": "correctness"
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.cache-hit-empty-results",
+      "path": "app\\crud.py",
+      "start": {
+        "line": 47,
+        "col": 5,
+        "offset": 1951
+      },
+      "end": {
+        "line": 48,
+        "col": 18,
+        "offset": 1979
+      },
+      "extra": {
+        "metavars": {},
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Cache hit returns empty transaction history rather than cached content",
+        "metadata": {
+          "category": "correctness"
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.str-interpolated-sql",
+      "path": "app\\crud.py",
+      "start": {
+        "line": 61,
+        "col": 13,
+        "offset": 2351
+      },
+      "end": {
+        "line": 61,
+        "col": 57,
+        "offset": 2395
+      },
+      "extra": {
+        "metavars": {
+          "$SQL": {
+            "start": {
+              "line": 61,
+              "col": 13,
+              "offset": 2351
+            },
+            "end": {
+              "line": 61,
+              "col": 16,
+              "offset": 2354
+            },
+            "abstract_content": "sql",
+            "propagated_value": {
+              "svalue_start": {
+                "line": 52,
+                "col": 15,
+                "offset": 2062
+              },
+              "svalue_end": {
+                "line": 57,
+                "col": 12,
+                "offset": 2278
+              },
+              "svalue_abstract_content": "\"\"\"\n        SELECT t.id, t.from_account_id, t.to_account_id, t.amount_cents, t.created_at\n        FROM transactions t\n        JOIN accounts a ON a.id = t.from_account_id\n        WHERE a.owner_user_id = $1\n        \"\"\""
+            }
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "SQL assembled with f-string: investigate whether interpolated portion is user-controlled (not SQLi by itself)",
+        "metadata": {
+          "category": "audit",
+          "cwe": [
+            "CWE-89"
+          ]
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.str-interpolated-sql",
+      "path": "app\\crud.py",
+      "start": {
+        "line": 64,
+        "col": 9,
+        "offset": 2464
+      },
+      "end": {
+        "line": 64,
+        "col": 57,
+        "offset": 2512
+      },
+      "extra": {
+        "metavars": {
+          "$SQL": {
+            "start": {
+              "line": 64,
+              "col": 9,
+              "offset": 2464
+            },
+            "end": {
+              "line": 64,
+              "col": 12,
+              "offset": 2467
+            },
+            "abstract_content": "sql"
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "SQL assembled with f-string: investigate whether interpolated portion is user-controlled (not SQLi by itself)",
+        "metadata": {
+          "category": "audit",
+          "cwe": [
+            "CWE-89"
+          ]
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.untrusted-user-id-header",
+      "path": "app\\security.py",
+      "start": {
+        "line": 3,
+        "col": 1,
+        "offset": 43
+      },
+      "end": {
+        "line": 13,
+        "col": 73,
+        "offset": 537
+      },
+      "extra": {
+        "metavars": {},
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Identity is taken directly from attacker-controlled X-User-Id header without verification",
+        "metadata": {
+          "category": "security",
+          "cwe": [
+            "CWE-287",
+            "CWE-639"
+          ]
+        },
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.compose-db-password",
+      "path": "docker-compose.yml",
+      "start": {
+        "line": 7,
+        "col": 7,
+        "offset": 84
+      },
+      "end": {
+        "line": 7,
+        "col": 34,
+        "offset": 111
+      },
+      "extra": {
+        "metavars": {},
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Статический пароль базы в манифесте.",
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.published-data-port",
+      "path": "docker-compose.yml",
+      "start": {
+        "line": 11,
+        "col": 9,
+        "offset": 185
+      },
+      "end": {
+        "line": 11,
+        "col": 20,
+        "offset": 196
+      },
+      "extra": {
+        "metavars": {
+          "$1": {
+            "start": {
+              "line": 11,
+              "col": 10,
+              "offset": 186
+            },
+            "end": {
+              "line": 11,
+              "col": 19,
+              "offset": 195
+            },
+            "abstract_content": "5432:5432"
+          },
+          "$2": {
+            "start": {
+              "line": 11,
+              "col": 10,
+              "offset": 186
+            },
+            "end": {
+              "line": 11,
+              "col": 19,
+              "offset": 195
+            },
+            "abstract_content": "5432:5432"
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Порт хранилища опубликован на хосте.",
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.published-data-port",
+      "path": "docker-compose.yml",
+      "start": {
+        "line": 18,
+        "col": 9,
+        "offset": 298
+      },
+      "end": {
+        "line": 18,
+        "col": 20,
+        "offset": 309
+      },
+      "extra": {
+        "metavars": {
+          "$1": {
+            "start": {
+              "line": 18,
+              "col": 10,
+              "offset": 299
+            },
+            "end": {
+              "line": 18,
+              "col": 19,
+              "offset": 308
+            },
+            "abstract_content": "6379:6379"
+          },
+          "$3": {
+            "start": {
+              "line": 18,
+              "col": 10,
+              "offset": 299
+            },
+            "end": {
+              "line": 18,
+              "col": 19,
+              "offset": 308
+            },
+            "abstract_content": "6379:6379"
+          }
+        },
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Порт хранилища опубликован на хосте.",
+        "validation_state": "NO_VALIDATOR"
+      }
+    },
+    {
+      "check_id": "bank.compose-inline-dsn",
+      "path": "docker-compose.yml",
+      "start": {
+        "line": 23,
+        "col": 21,
+        "offset": 368
+      },
+      "end": {
+        "line": 23,
+        "col": 52,
+        "offset": 399
+      },
+      "extra": {
+        "metavars": {},
+        "engine_kind": "OSS",
+        "is_ignored": false,
+        "message": "Учётные данные в открытом DSN.",
+        "validation_state": "NO_VALIDATOR"
+      }
+    }
+  ],
+  "manual": [
+    {
+      "check_id": "manual.bank.idor",
+      "path": "app/crud.py",
+      "start": {
+        "line": 5,
+        "col": 1
+      },
+      "end": {
+        "line": 16,
+        "col": 1
+      },
+      "extra": {
+        "severity": "ERROR",
+        "message": "Условный межклиентский доступ: проверка владельца доверяет user_id из X-User-Id. См. app/security.py:3–13 и app/main.py:13–25. Сервис из архива не стартует из-за импортов.",
+        "metadata": {
+          "source": "manual_review",
+          "cwe": [
+            "CWE-287",
+            "CWE-639"
+          ]
+        }
+      }
+    }
+  ]
+}
